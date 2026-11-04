@@ -16,18 +16,26 @@ On Windows, each chime is played through a hidden `powershell.exe` (`System.Medi
 
 ## Install
 
-At the prompt of a terminal session:
+At the prompt of a Claude Code session, add the marketplace, then install from it:
 
 ```
-/plugin install session-chimes --marketplace levinium/session-chimes
+/plugin marketplace add levinium/session-chimes
 ```
 
-Answer `y` to add the marketplace, then press Enter to install it at the user scope (every session on this computer).
+```
+/plugin install session-chimes@session-chimes
+```
+
+Pick the user scope so it loads in every session on this computer.
 
 From a shell:
 
 ```bash
-claude plugin install session-chimes --marketplace levinium/session-chimes
+claude plugin marketplace add levinium/session-chimes
+```
+
+```bash
+claude plugin install session-chimes@session-chimes
 ```
 
 In the desktop app, where `/plugin` does not run: click + next to the prompt box, then Plugins, Add marketplace with `levinium/session-chimes`, then Add plugin.
