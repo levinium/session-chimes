@@ -1,6 +1,6 @@
 {
   "name": "session-chimes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Plays a soft chime when a session finishes its task and a brighter one when it needs your input.",
   "author": {
     "name": "levinium"
