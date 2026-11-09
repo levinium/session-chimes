@@ -1,9 +1,10 @@
 {
   "name": "session-chimes",
-  "version": "0.1.1",
-  "description": "Plays a soft chime when a session finishes its task and a brighter one when it needs your input.",
+  "version": "0.2.0",
+  "description": "Plays a sound when a session finishes or needs your input; /chimes picks the sounds.",
   "author": {
     "name": "levinium"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "types": "./types/index.d.ts"
 }
