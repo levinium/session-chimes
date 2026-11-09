@@ -2,9 +2,9 @@
 whose pitch glides; timbre comes from a soft square wave, optional FM wobble and
 ring modulation, then a gentle low-pass so it stays pleasant in a headset.
 
-The defaults came from round 4: finished-C is sounds/robot-statement.wav,
-needs-input-A robot-question.wav, error-A robot-grumble.wav.
-Run: python tools/robot_sketches.py <out folder>"""
+Defaults: sounds/robot-statement.wav is round 6's variant 4 (below);
+robot-question.wav and robot-grumble.wav came from round 4 (Needs input A and
+Error A: see git history). Run: python tools/robot_sketches.py <out folder>"""
 import math, struct, sys, wave
 from pathlib import Path
 
@@ -72,32 +72,26 @@ def write(path, samples):
         w.writeframes(b''.join(struct.pack('<h', int(max(-1, min(1, s)) * 32767)) for s in samples))
 
 
-# Round 4: smooth, short, and less busy: two gestures each.
+# Round 6: variations on round 5's D (two blips on one pitch, the second easing down).
 
-# Finished: a calm statement. One note, then a soft settle downward.
-FINISHED = {
-    'A': voice([(659, 659, 0.14), ('rest', 0.05), (740, 554, 0.40)], hardness=1.4, glide_curve=0.7),
-    'B': voice([(587, 740, 0.14), (659, 494, 0.45)], hardness=1.5, glide_curve=0.7),
-    'C': voice([(784, 784, 0.12), ('rest', 0.06), (659, 659, 0.42)], hardness=1.3),
-}
-
-# Needs input: a question. One note (or none), then a rise at the end.
-NEEDS_INPUT = {
-    'A': voice([(700, 700, 0.12), ('rest', 0.05), (700, 1400, 0.30)], hardness=1.8, glide_curve=2.2),
-    'B': voice([(700, 640, 0.08), (640, 1300, 0.34)], hardness=1.8, glide_curve=2.5),
-    'C': voice([(880, 880, 0.08), ('rest', 0.05), (740, 1250, 0.30)], hardness=1.6, glide_curve=2.0),
-}
-
-# Error: low and falling, rounded rather than buzzy.
-ERROR = {
-    'A': voice([(330, 330, 0.12), ('rest', 0.04), (300, 160, 0.45)], hardness=2.4, wobble=(10, 0.03), ring=0.1),
-    'B': voice([(392, 247, 0.16), ('rest', 0.05), (220, 130, 0.40)], hardness=2.2, wobble=(7, 0.03)),
-    'C': voice([(294, 196, 0.20), ('rest', 0.05), (196, 110, 0.42)], hardness=2.6, wobble=(12, 0.035), ring=0.15),
+STATEMENT = {
+    # D as it was, for reference.
+    '0': voice([(698, 698, 0.08), ('rest', 0.05), (698, 600, 0.38)], hardness=1.3, glide_curve=1.8),
+    # 1: a smaller fall, subtler.
+    '1': voice([(698, 698, 0.08), ('rest', 0.05), (698, 650, 0.38)], hardness=1.3, glide_curve=1.8),
+    # 2: the same shape, lower and warmer.
+    '2': voice([(587, 587, 0.08), ('rest', 0.05), (587, 505, 0.38)], hardness=1.3, glide_curve=1.8),
+    # 3: a shorter tail, crisper.
+    '3': voice([(698, 698, 0.08), ('rest', 0.05), (698, 610, 0.26)], hardness=1.3, glide_curve=1.6),
+    # 4: tighter: a shorter first blip and gap.
+    '4': voice([(698, 698, 0.06), ('rest', 0.03), (698, 600, 0.34)], hardness=1.3, glide_curve=1.8),
+    # 5: the tail holds level, then dips only at the very end.
+    '5': voice([(698, 698, 0.08), ('rest', 0.05), (698, 600, 0.38)], hardness=1.3, glide_curve=3.5),
 }
 
 out = Path(sys.argv[1])
 out.mkdir(parents=True, exist_ok=True)
-for name, group in (('finished', FINISHED), ('needs-input', NEEDS_INPUT), ('error', ERROR)):
+for name, group in (('statement', STATEMENT),):
     reel = []
     for key, s in group.items():
         write(out / f'{name}-{key}.wav', s)

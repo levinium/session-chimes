@@ -196,15 +196,19 @@ export const register: Register = on => {
         </Box>
 
         {EVENTS.map(ev => (
-          <Box key={`row-${ev.id}`} flexDirection="column">
-            <Box flexDirection="row" gap={1} alignItems="center">
-              <Select
-                key={`sound-${ev.id}`}
-                label={ev.label}
-                options={CHOICES}
-                value={s.sounds[ev.id]}
-                onSelect={value => void save($, x => ({ ...x, sounds: { ...x.sounds, [ev.id]: value } }))}
-              />
+          // One card per event, stacked: beside the dropdown the button overlaps it in a
+          // narrow pane, and across the pane it reads as belonging to nothing.
+          <Box key={`row-${ev.id}`} flexDirection="column" gap={1} borderStyle="round" borderDimColor paddingX={1}>
+            <Text bold wrap="truncate-end">
+              {ev.label}
+            </Text>
+            <Select
+              key={`sound-${ev.id}`}
+              options={CHOICES}
+              value={s.sounds[ev.id]}
+              onSelect={value => void save($, x => ({ ...x, sounds: { ...x.sounds, [ev.id]: value } }))}
+            />
+            <Box flexDirection="row">
               <Button key={`play-${ev.id}`} label="▶ Preview" onPress={() => preview($, ev.id)} />
             </Box>
             {s.sounds[ev.id] === 'custom' && (
