@@ -157,13 +157,12 @@ export const register: Register = on => {
     return result
   })
 
-  // A permission prompt is about to be shown.
-  on('tool.check', async ($, e, next) => {
-    const verdict = await next(e)
-    if (verdict.decision === 'ask' && e.tool_use_id !== undefined && e.approver !== undefined) {
-      quietly($, 'attention')
-    }
-    return verdict
+  // A permission prompt is about to be shown. Not tool.check's 'ask': that verdict
+  // comes before the mode decides, so dontAsk denials, auto-mode classifier allows
+  // and a host's own rules all reach it without anyone being asked.
+  on('classic.PermissionRequest', ($, e, next) => {
+    quietly($, 'attention')
+    return next(e)
   }).catch(($, e, next) => next(e))
 
   // A question or plan approval waits on the person.

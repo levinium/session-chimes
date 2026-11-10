@@ -46,6 +46,20 @@ claude plugin install session-chimes@session-chimes
 
 In the desktop app, where `/plugin` does not run: click + next to the prompt box, then Plugins, Add marketplace with `levinium/session-chimes`, then Add plugin.
 
+## Update
+
+Refresh the marketplace, then update the plugin:
+
+```bash
+claude plugin marketplace update session-chimes
+```
+
+```bash
+claude plugin update session-chimes@session-chimes
+```
+
+The new version loads in the next session you start. In the desktop app, you can also refresh the marketplace from + next to the prompt box, then Plugins.
+
 ## License
 
 MIT
