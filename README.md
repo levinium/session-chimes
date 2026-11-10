@@ -4,11 +4,13 @@ A Claude Code mod that plays a sound when a session needs you, so you can tell f
 
 | When | Default sound |
 |---|---|
-| A session finishes its task and stops | **Robot: statement**, a calm note that settles lower |
+| A session finishes its task and stops, with nothing left running in the background | **Robot: statement**, a calm note that settles lower |
 | A permission prompt, a question from Claude (`AskUserQuestion`), or a plan waiting for approval | **Robot: question**, a note and then a rise, like a question |
 | A turn ends on an error | **Robot: grumble**, a low droop |
 
 Nothing plays when you interrupt a turn yourself, or when a subagent finishes. No system notification is shown.
+
+A turn that ends while background work is still pending (a background command such as a deploy, a background agent, a monitor, a workflow, or a scheduled wake-up from `/loop` or `ScheduleWakeup`) is waiting, not finished, so it plays nothing. When that work finishes it wakes the session, and the turn that follows plays the finished sound once nothing is left. Work the session can't see, such as a CI run you were asked to watch, still counts as finished.
 
 ## Choosing sounds
 

@@ -149,13 +149,25 @@ export const register: Register = on => {
     return { text: 'Chime settings opened.' }
   })
 
-  // Main loop finished: the done sound. Errors leave it stuck, so they ask for you.
+  // Main loop ended on an error: it stays stuck, so it asks for you. A turn that
+  // answered chimes from classic.Stop below, which knows what is still running.
   on('turn.complete', async ($, e, next) => {
     const result = await next(e)
-    if (e.agentId !== undefined || e.reason === 'aborted') return result
-    quietly($, e.reason === 'answer' ? 'done' : 'error')
+    if (e.agentId !== undefined || e.reason === 'aborted' || e.reason === 'answer') return result
+    quietly($, 'error')
     return result
   })
+
+  // Main loop stopped: the done sound, unless background work or a scheduled
+  // wake-up is still pending. Then the session is waiting, not done, and the turn
+  // that work wakes chimes when it ends with nothing left.
+  on('classic.Stop', async ($, e, next) => {
+    const result = await next(e)
+    if (e.agent_id !== undefined || result.block) return result
+    const isWaiting = (e.background_tasks?.length ?? 0) > 0 || (e.session_crons?.length ?? 0) > 0
+    if (!isWaiting) quietly($, 'done')
+    return result
+  }).catch(($, e, next) => next(e))
 
   // A permission prompt is about to be shown. Not tool.check's 'ask': that verdict
   // comes before the mode decides, so dontAsk denials, auto-mode classifier allows
